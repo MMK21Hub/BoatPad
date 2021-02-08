@@ -1,0 +1,16 @@
+{
+  "name": "boatpad",
+  "productName": "BoatPad",
+  "description": "Playing around with electron",
+  "keywords": [],
+  "main": "./main.js",
+  "version": "0.1.0",
+  "author": "MMK21",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "11.0.0-beta.13"
+  }
+}
