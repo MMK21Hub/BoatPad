@@ -1,6 +1,4 @@
-// This file is required by the index.html file and will
-// be executed in the renderer process for that window.
-// All of the Node.js APIs are available in this process.
+const { Menu, MenuItem } = require("electron").remote;
 
 document.querySelector("textarea").placeholder = `Welcome to BoatPad!
 BoatPad is an advanced™ text editor capable of using the full set of unicode characters limitlessly.
@@ -14,3 +12,24 @@ Features:
  - Automatic text wrapping
  - Familiar keyboard shortcuts
 `;
+
+window.bp = {};
+bp.view = {
+  native: true,
+  zen: true,
+};
+
+const menu = new Menu();
+menu.append(
+  new MenuItem({
+    label: "View",
+    submenu: [
+      {
+        role: "Toggle zen mode",
+        click: () => {
+          console.log("Test");
+        },
+      },
+    ],
+  })
+);

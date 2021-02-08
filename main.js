@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, Menu, MenuItem } = require("electron");
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -7,9 +7,9 @@ function createWindow() {
     frame: false,
     webPreferences: {
       nodeIntegration: true,
+      enableRemoteModule: true,
     },
   });
-
   mainWindow.loadFile("index.html");
 }
 
