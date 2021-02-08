@@ -7,10 +7,10 @@ BoatPad is an advanced™ text editor capable of using the full set of unicode c
 
 Features:
  - Simple, easy to understand UI
- - Fully customisable: just hit Ctrl+Shift+I
+ - Fully customizable: just hit Ctrl+Shift+I
  - No bloat
  - Runs smoothly
  - Resize the window to whatever size you like
  - Automatic text wrapping
  - Familiar keyboard shortcuts
-`
+`;
