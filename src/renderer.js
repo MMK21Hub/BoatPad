@@ -32,6 +32,22 @@ Features:
  - Familiar keyboard shortcuts
 `,
         )
+        bp.commands.list = {
+            "window.close": {
+                name: "Close",
+                handler: () => {
+                    console.log("close")
+                },
+                args: null,
+            },
+        }
+        bp.commands.exec = (command, args) => {
+            if (bp.commands.list.hasOwnProperty(command)) {
+                console.log("yes")
+            } else {
+                throw "Command Error: That command doesn't exist"
+            }
+        }
     } else {
         $("#main-textbox").prop(
             "placeholder",
