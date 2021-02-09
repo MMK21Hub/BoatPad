@@ -1,0 +1,24 @@
+textarea {
+    width: 100%;
+    height: 100%;
+    resize: none;
+    overflow: auto;
+    box-sizing: border-box;
+    border: none;
+    background: #212121;
+    color: white;
+}
+
+textarea:focus {
+    outline: none;
+}
+
+html,
+body {
+    height: 100%;
+    background: transparent;
+}
+
+body {
+    margin: 0;
+}

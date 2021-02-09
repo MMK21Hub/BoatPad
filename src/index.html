@@ -4,37 +4,21 @@
 <head>
   <meta charset="UTF-8">
   <title>BoatPad</title>
-  <style>
-    textarea {
-      width: 100%;
-      height: 100%;
-      resize: none;
-      overflow: auto;
-      box-sizing: border-box;
-      border: none;
-      background: #212121;
-      color: white;
+  <link rel="stylesheet" href="styles.css">
+  <script src="../assets/cash.js"></script>
+  <script>
+    window.bp = {
+      context: "main",
+      window: {},
+      view: {},
+      config: {},
+      ext: {}
     }
-
-    textarea:focus {
-      outline: none;
-    }
-
-    html,
-    body {
-      height: 100%;
-      background: transparent;
-    }
-
-    body {
-      margin: 0;
-    }
-  </style>
-  <script src="assets/cash.js"></script>
+  </script>
 </head>
 
 <body>
-  <textarea placeholder="Loading..."></textarea>
+  <textarea id="main-textbox" placeholder="Loading..."></textarea>
   <script>
     require('./renderer.js')
   </script>

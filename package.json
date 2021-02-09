@@ -3,11 +3,11 @@
   "productName": "BoatPad",
   "description": "Playing around with electron",
   "keywords": [],
-  "main": "./main.js",
+  "main": "src/main.js",
   "version": "0.1.0",
   "author": "MMK21",
   "scripts": {
-    "start": "electron ."
+    "start": "electron src/main.js"
   },
   "dependencies": {},
   "devDependencies": {
