@@ -1,17 +1,23 @@
-const { Menu, MenuItem, BrowserWindow } = require("electron").remote
+const {
+    Menu,
+    MenuItem,
+    BrowserWindow,
+    systemPreferences,
+} = require("electron").remote
 const remote = require("electron").remote
 
 bp.window.currentWindow = remote.getCurrentWindow()
 
 bp.window.createMiniWindow = () => {
     const miniWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 250,
+        height: 250,
         frame: false,
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: true,
         },
+        alwaysOnTop: true,
     })
     miniWindow.loadFile("mini.html")
 }
@@ -53,12 +59,17 @@ Features:
             }
         }
     } else {
-        $("#main-textbox").prop(
-            "placeholder",
-            `\
+        $("#main-textbox")
+            .prop(
+                "placeholder",
+                `\
 == BoatPad Immersive Window ==
 
 Hit Ctrl+W to return to the main window.`,
-        )
+            )
+            .css("border-color", "#" + systemPreferences.getAccentColor())
+            .css("border-width", "1px")
+            .css("border-style", "solid")
+        $("body").addClass("zen")
     }
 })
