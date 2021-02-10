@@ -74,10 +74,12 @@ Features:
             },
         }
         bp.commands.exec = (command, args) => {
-            if (bp.commands.list.hasOwnProperty(command)) {
+            if (!command) {
+                throw "Error: The command parameter is required."
+            } else if (bp.commands.list.hasOwnProperty(command)) {
                 return bp.commands.list[command].handler(args)
             } else {
-                throw "Command Error: That command doesn't exist"
+                throw "Error: That command doesn't exist"
             }
         }
     } else {
