@@ -83,7 +83,15 @@ Features:
             "view",
         ]
         bp.commands.register = (id, name, type, handler, args) => {
-            if (!bp.commands.reservedNamespaces.includes(id.split(".", 2)[0])) {
+            if (!id) {
+                throw "Error: The id parameter is required."
+            } else if (type && (type != "simple" || type != "handled")) {
+                throw "Error: Invalid command type."
+            } else if (bp.commands.list.hasOwnProperty(id)) {
+                throw "Error: That command has already been registered!"
+            } else if (
+                !bp.commands.reservedNamespaces.includes(id.split(".", 2)[0])
+            ) {
                 console.log("yes")
             } else {
                 throw "Error: You cannot add a command to a reserved namespace."
