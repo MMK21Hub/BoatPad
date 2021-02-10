@@ -89,10 +89,22 @@ Features:
                 throw "Error: Invalid command type."
             } else if (bp.commands.list.hasOwnProperty(id)) {
                 throw "Error: That command has already been registered!"
+            } else if (!handler) {
+                throw "Error: The handler parameter is required."
+            } else if (type != "handled" && typeof handler != "function") {
+                throw "Error: The handler parameter must be a javascript function."
             } else if (
                 !bp.commands.reservedNamespaces.includes(id.split(".", 2)[0])
             ) {
-                console.log("yes")
+                type ||= "handled"
+                args ||= null
+                bp.commands.list[id] = {
+                    name: name,
+                    type: type,
+                    handler: handler,
+                    args: args,
+                }
+                return bp.commands.list[id]
             } else {
                 throw "Error: You cannot add a command to a reserved namespace."
             }
