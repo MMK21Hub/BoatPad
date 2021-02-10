@@ -94,8 +94,10 @@ Features:
             } else if (type != "handled" && typeof handler != "function") {
                 throw "Error: The handler parameter must be a javascript function."
             } else if (
-                !bp.commands.reservedNamespaces.includes(id.split(".", 2)[0])
+                bp.commands.reservedNamespaces.includes(id.split(".", 2)[0])
             ) {
+                throw "Error: You cannot add a command to a reserved namespace."
+            } else {
                 type ||= "handled"
                 args ||= null
                 bp.commands.list[id] = {
@@ -105,8 +107,6 @@ Features:
                     args: args,
                 }
                 return bp.commands.list[id]
-            } else {
-                throw "Error: You cannot add a command to a reserved namespace."
             }
         }
         bp.commands.exec = (command, args) => {
