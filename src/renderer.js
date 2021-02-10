@@ -1,4 +1,7 @@
 const { Menu, MenuItem, BrowserWindow } = require("electron").remote
+const remote = require("electron").remote
+
+bp.window.currentWindow = remote.getCurrentWindow()
 
 bp.window.createMiniWindow = () => {
     const miniWindow = new BrowserWindow({
@@ -37,7 +40,7 @@ Features:
                 name: "Close",
                 type: "handled",
                 handler: () => {
-                    console.log("close")
+                    window.close()
                 },
                 args: null,
             },
