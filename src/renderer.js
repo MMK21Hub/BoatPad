@@ -73,7 +73,7 @@ Features:
                 args: null,
             },
         }
-        bp.commands.namespaces = [
+        bp.commands.reservedNamespaces = [
             "window",
             "file",
             "debug",
@@ -82,6 +82,13 @@ Features:
             "edit",
             "view",
         ]
+        bp.commands.register = (id, name, type, handler, args) => {
+            if (!bp.commands.reservedNamespaces.includes(id.split(".", 2)[0])) {
+                console.log("yes")
+            } else {
+                throw "Error: You cannot add a command to a reserved namespace."
+            }
+        }
         bp.commands.exec = (command, args) => {
             if (!command) {
                 throw "Error: The command parameter is required."
