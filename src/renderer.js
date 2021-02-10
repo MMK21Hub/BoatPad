@@ -35,6 +35,7 @@ Features:
         bp.commands.list = {
             "window.close": {
                 name: "Close",
+                type: "handled",
                 handler: () => {
                     console.log("close")
                 },
@@ -43,7 +44,7 @@ Features:
         }
         bp.commands.exec = (command, args) => {
             if (bp.commands.list.hasOwnProperty(command)) {
-                console.log("yes")
+                return bp.commands.list[command].handler(args)
             } else {
                 throw "Command Error: That command doesn't exist"
             }
