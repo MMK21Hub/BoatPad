@@ -65,7 +65,7 @@ Features:
         )
         bp.commands.list = {
             "window.close": {
-                name: "Close",
+                name: "Window: Close",
                 type: "handled",
                 handler: () => {
                     window.close()
@@ -87,6 +87,8 @@ Features:
                 throw "Error: The id parameter is required."
             } else if (type && (type != "simple" || type != "handled")) {
                 throw "Error: Invalid command type."
+            } else if (id.split(".").length === 1) {
+                throw "Error: Command ids must be namespaced."
             } else if (bp.commands.list.hasOwnProperty(id)) {
                 throw "Error: That command has already been registered!"
             } else if (!handler) {
@@ -94,7 +96,7 @@ Features:
             } else if (type != "handled" && typeof handler != "function") {
                 throw "Error: The handler parameter must be a javascript function."
             } else if (
-                bp.commands.reservedNamespaces.includes(id.split(".", 2)[0])
+                bp.commands.reservedNamespaces.includes(id.split(".")[0])
             ) {
                 throw "Error: You cannot add a command to a reserved namespace."
             } else {
