@@ -23,6 +23,28 @@ bp.window.createMiniWindow = () => {
 }
 bp.view.zen ||= false
 
+/*const contextMenu = new Menu()
+contextMenu.append(
+    new MenuItem({
+        label: "Test",
+        click() {
+        },
+    }),
+)
+contextMenu.append(new MenuItem({ type: "separator" }))
+contextMenu.append(
+    new MenuItem({ label: "MenuItem2", type: "checkbox", checked: true }),
+)
+
+window.addEventListener(
+    "contextmenu",
+    (ctx) => {
+        ctx.preventDefault()
+        contextMenu.popup({ window: remote.getCurrentWindow() })
+    },
+    false,
+)*/
+
 $(() => {
     if (!bp.view.zen) {
         $("#main-textbox").prop(
