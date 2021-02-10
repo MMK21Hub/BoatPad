@@ -73,6 +73,15 @@ Features:
                 args: null,
             },
         }
+        bp.commands.namespaces = [
+            "window",
+            "file",
+            "debug",
+            "editor",
+            "config",
+            "edit",
+            "view",
+        ]
         bp.commands.exec = (command, args) => {
             if (!command) {
                 throw "Error: The command parameter is required."
