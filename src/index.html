@@ -19,6 +19,10 @@
     if (typeof process === 'undefined') {
       // In browser
       bp.context = "browser"
+      if (!window.name) {
+        history.back()
+        window.open(window.location.href, "BoatPad", "width=1000,height=800")
+      }
     } else if (process.versions.electron) {
       // In electron
       bp.context = "electron"
