@@ -72,6 +72,22 @@ Features:
                 },
                 args: null,
             },
+            "debug.return": {
+                name: "Debug: Return",
+                type: "handled",
+                handler: (args) => {
+                    console.log(args[0])
+                },
+                args: 1,
+            },
+            "debug.test": {
+                name: "Debug: Test",
+                type: "handled",
+                handler: (args) => {
+                    console.log("Hello world!")
+                },
+                args: null,
+            },
         }
         bp.commands.reservedNamespaces = [
             "window",
@@ -114,10 +130,22 @@ Features:
         bp.commands.exec = (command, args) => {
             if (!command) {
                 throw "Error: The command parameter is required."
-            } else if (bp.commands.list.hasOwnProperty(command)) {
-                return bp.commands.list[command].handler(args)
-            } else {
+            } else if (!bp.commands.list.hasOwnProperty(command)) {
                 throw "Error: That command doesn't exist"
+            } else if (
+                !(
+                    (bp.commands.list[command].args
+                        ? bp.commands.list[command].args
+                        : 0) === (args ? args.length : 0)
+                )
+            ) {
+                throw `Error: That command requires ${
+                    bp.commands.list[command].args
+                        ? bp.commands.list[command].args
+                        : 0
+                } arguments, but received ${args ? args.length : "none"}.`
+            } else {
+                return bp.commands.list[command].handler(args)
             }
         }
     } else {
