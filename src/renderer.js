@@ -169,6 +169,7 @@ Features:
                 files.forEach((file) => {
                     if (path.extname(file) === ".js") {
                         // We found a script!
+                        validScript = true
                         try {
                             acorn.parse(
                                 fs.readFileSync("./.boatpad/scripts/" + file),
@@ -176,13 +177,16 @@ Features:
                             )
                         } catch (error) {
                             console.error(
-                                `Failed to parse script (${file}). Scripts must be valid ES2020. \n${error.message}`,
+                                `Failed to parse script when registering (${file}). Scripts must be valid ES2020. \n${error.message}`,
                             )
+                            validScript = false
                         }
-                        bp.scripts.list.push({
-                            name: file,
-                            enabled: true,
-                        })
+                        if (validScript) {
+                            bp.scripts.list.push({
+                                name: file,
+                                enabled: true,
+                            })
+                        }
                     } else if (path.extname(file) === ".ts") {
                         console.warn(
                             "Skipping typescript file in scripts folder: " +
