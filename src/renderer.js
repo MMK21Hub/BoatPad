@@ -5,6 +5,8 @@ const {
     systemPreferences,
 } = require("electron").remote
 const remote = require("electron").remote
+const fs = require("fs")
+const path = require("path")
 
 bp.window.currentWindow = remote.getCurrentWindow()
 
@@ -44,6 +46,9 @@ window.addEventListener(
     },
     false,
 )*/
+
+// Init the .boatpad dir
+fs.mkdir("./.boatpad/", () => {})
 
 $(() => {
     if (!bp.view.zen) {
@@ -147,6 +152,33 @@ Features:
             } else {
                 return bp.commands.list[command].handler(args)
             }
+        }
+        bp.scripts.list = []
+        bp.scripts.register = (path) => {
+            if (!path) {
+                throw "Error: The path parameter is required."
+            } else {
+                throw "Error: Tried to register script from unsafe source"
+            }
+        }
+
+        // Register any new scripts:
+        if (fs.existsSync("./.boatpad/scripts/")) {
+            fs.readdir("./.boatpad/scripts/", (err, files) => {
+                files.forEach((file) => {
+                    if (path.extname(file) === ".js") {
+                        bp.scripts.list.push({
+                            name: file,
+                            enabled: true,
+                        })
+                    } else if (path.extname(file) === ".ts") {
+                        console.warn(
+                            "Skipping typescript file in scripts folder: " +
+                                file,
+                        )
+                    }
+                })
+            })
         }
     } else {
         $("#main-textbox")
