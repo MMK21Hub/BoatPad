@@ -96,6 +96,7 @@ Features:
             "config",
             "edit",
             "view",
+            "app",
         ]
         bp.commands.register = (id, name, type, handler, args) => {
             if (!id) {
