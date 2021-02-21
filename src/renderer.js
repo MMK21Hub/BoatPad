@@ -7,6 +7,7 @@ const {
 const remote = require("electron").remote
 const fs = require("fs")
 const path = require("path")
+const acorn = require("acorn")
 
 bp.window.currentWindow = remote.getCurrentWindow()
 
