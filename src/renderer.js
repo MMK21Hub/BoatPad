@@ -93,7 +93,6 @@ Features:
             "window",
             "file",
             "debug",
-            "editor",
             "config",
             "edit",
             "view",
