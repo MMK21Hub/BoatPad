@@ -168,6 +168,17 @@ Features:
             fs.readdir("./.boatpad/scripts/", (err, files) => {
                 files.forEach((file) => {
                     if (path.extname(file) === ".js") {
+                        // We found a script!
+                        try {
+                            acorn.parse(
+                                fs.readFileSync("./.boatpad/scripts/" + file),
+                                { ecmaVersion: 2020 },
+                            )
+                        } catch (error) {
+                            console.error(
+                                `Failed to parse script (${file}). Scripts must be valid ES2020. \n${error.message}`,
+                            )
+                        }
                         bp.scripts.list.push({
                             name: file,
                             enabled: true,
