@@ -63,6 +63,28 @@ window.addEventListener(
 // Init the .boatpad dir
 fs.mkdir("./.boatpad/", () => {})
 
+// Hooks:
+bp.hooks.list = {
+    "commands.register.success": {},
+    "window.domReady": {},
+}
+for (hook in bp.hooks.list) {
+    bp.hooks.list[hook] = {
+        handlers: [],
+    }
+}
+bp.hooks.addToHook = (hook, handler) => {
+    if (!hook) {
+        throw "Error: The hook parameter is required."
+    } else if (!handler) {
+        throw "Error: The handler parameter is required."
+    } else if (!bp.hooks.list[hook]) {
+        throw "Error: That hook doesn't exist"
+    }
+    index = bp.hooks.list[hook].handlers.push(handler) - 1
+    return index
+}
+
 // Scripts:
 bp.scripts.list = []
 bp.scripts.register = (path) => {
@@ -198,28 +220,6 @@ bp.commands.exec = (command, args) => {
     } else {
         return bp.commands.list[command].handler(args)
     }
-}
-
-// Hooks:
-bp.hooks.list = {
-    "commands.register.success": {},
-    "window.domReady": {},
-}
-for (hook in bp.hooks.list) {
-    bp.hooks.list[hook] = {
-        handlers: [],
-    }
-}
-bp.hooks.addToHook = (hook, handler) => {
-    if (!hook) {
-        throw "Error: The hook parameter is required."
-    } else if (!handler) {
-        throw "Error: The handler parameter is required."
-    } else if (!bp.hooks.list[hook]) {
-        throw "Error: That hook doesn't exist"
-    }
-    index = bp.hooks.list[hook].handlers.push(handler) - 1
-    return index
 }
 
 $(runHook("window.domReady"))
