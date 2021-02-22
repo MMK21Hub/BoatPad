@@ -6,6 +6,7 @@ const {
 } = require("electron").remote
 const remote = require("electron").remote
 const fs = require("fs")
+//const fsp = fs.promises
 const path = require("path")
 const acorn = require("acorn")
 
@@ -169,11 +170,12 @@ Features:
                 files.forEach((file) => {
                     if (path.extname(file) === ".js") {
                         // We found a script!
+                        console.log("Registering " + file)
                         validScript = true
                         try {
                             acorn.parse(
                                 fs.readFileSync("./.boatpad/scripts/" + file),
-                                { ecmaVersion: 2020 },
+                                { ecmaVersion: 2020, sourceType: "module" },
                             )
                         } catch (error) {
                             console.error(
@@ -184,6 +186,8 @@ Features:
                         if (validScript) {
                             bp.scripts.list.push({
                                 name: file,
+                                id: file.split(".")[0], // TODO: prevent duplicate IDs
+                                path: "../.boatpad/scripts/" + file,
                                 enabled: true,
                             })
                         }
@@ -194,6 +198,13 @@ Features:
                         )
                     }
                 })
+                console.log("All scripts registered")
+
+                // Load scripts:
+                console.log(`Loading ${bp.scripts.list.length} script(s)`)
+                for (let i in bp.scripts.list) {
+                    require(bp.scripts.list[i].path).script()
+                }
             })
         }
     } else {
