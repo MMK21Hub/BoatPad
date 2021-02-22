@@ -63,6 +63,59 @@ window.addEventListener(
 // Init the .boatpad dir
 fs.mkdir("./.boatpad/", () => {})
 
+// Scripts:
+bp.scripts.list = []
+bp.scripts.register = (path) => {
+    if (!path) {
+        throw "Error: The path parameter is required."
+    } else {
+        throw "Error: Tried to register script from unsafe source"
+    }
+}
+// Register any new scripts:
+if (fs.existsSync("./.boatpad/scripts/")) {
+    fs.readdir("./.boatpad/scripts/", (err, files) => {
+        files.forEach((file) => {
+            if (path.extname(file) === ".js") {
+                // We found a script!
+                console.log("Registering " + file)
+                validScript = true
+                try {
+                    acorn.parse(fs.readFileSync("./.boatpad/scripts/" + file), {
+                        ecmaVersion: 2020,
+                        sourceType: "module",
+                    })
+                } catch (error) {
+                    console.error(
+                        `Failed to parse script when registering (${file}). Scripts must be valid ES2020. \n${error.message}`,
+                    )
+                    validScript = false
+                }
+                if (validScript) {
+                    bp.scripts.list.push({
+                        name: file,
+                        id: file.split(".")[0], // TODO: prevent duplicate IDs
+                        path: "../.boatpad/scripts/" + file,
+                        enabled: true,
+                    })
+                }
+            } else if (path.extname(file) === ".ts") {
+                console.warn(
+                    "Skipping typescript file in scripts folder: " + file,
+                )
+            }
+        })
+        console.log("All scripts registered")
+
+        // Load scripts:
+        console.log(`Loading ${bp.scripts.list.length} script(s)`)
+        for (let i in bp.scripts.list) {
+            bp.scripts.list[i].content = require(bp.scripts.list[i].path)
+            bp.scripts.list[i].content.script()
+        }
+    })
+}
+
 // Commands:
 bp.commands.list = {
     "window.close": {
@@ -147,16 +200,6 @@ bp.commands.exec = (command, args) => {
     }
 }
 
-// Scripts:
-bp.scripts.list = []
-bp.scripts.register = (path) => {
-    if (!path) {
-        throw "Error: The path parameter is required."
-    } else {
-        throw "Error: Tried to register script from unsafe source"
-    }
-}
-
 // Hooks:
 bp.hooks.list = {
     "commands.register.success": {},
@@ -177,50 +220,6 @@ bp.hooks.addToHook = (hook, handler) => {
     }
     index = bp.hooks.list[hook].handlers.push(handler) - 1
     return index
-}
-
-// Register any new scripts:
-if (fs.existsSync("./.boatpad/scripts/")) {
-    fs.readdir("./.boatpad/scripts/", (err, files) => {
-        files.forEach((file) => {
-            if (path.extname(file) === ".js") {
-                // We found a script!
-                console.log("Registering " + file)
-                validScript = true
-                try {
-                    acorn.parse(fs.readFileSync("./.boatpad/scripts/" + file), {
-                        ecmaVersion: 2020,
-                        sourceType: "module",
-                    })
-                } catch (error) {
-                    console.error(
-                        `Failed to parse script when registering (${file}). Scripts must be valid ES2020. \n${error.message}`,
-                    )
-                    validScript = false
-                }
-                if (validScript) {
-                    bp.scripts.list.push({
-                        name: file,
-                        id: file.split(".")[0], // TODO: prevent duplicate IDs
-                        path: "../.boatpad/scripts/" + file,
-                        enabled: true,
-                    })
-                }
-            } else if (path.extname(file) === ".ts") {
-                console.warn(
-                    "Skipping typescript file in scripts folder: " + file,
-                )
-            }
-        })
-        console.log("All scripts registered")
-
-        // Load scripts:
-        console.log(`Loading ${bp.scripts.list.length} script(s)`)
-        for (let i in bp.scripts.list) {
-            bp.scripts.list[i].content = require(bp.scripts.list[i].path)
-            bp.scripts.list[i].content.script()
-        }
-    })
 }
 
 $(runHook("window.domReady"))
