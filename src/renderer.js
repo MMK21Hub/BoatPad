@@ -128,9 +128,11 @@ if (fs.existsSync("./.boatpad/scripts/")) {
                 )
             }
         })
+        bp.scripts.ready = true
         console.log("All scripts registered")
 
         // Load scripts:
+        // TODO: Some sort of /reload equivalent
         console.log(`Loading ${bp.scripts.list.length} script(s)`)
         for (let i in bp.scripts.list) {
             bp.scripts.list[i].content = require(bp.scripts.list[i].path)
@@ -225,11 +227,20 @@ bp.commands.exec = (command, args) => {
     }
 }
 
-// Commands etc are initiated, ready for scripts to run
-for (let i in bp.scripts.list) {
-    bp.scripts.list[i].content.main ? bp.scripts.list[i].content.main() : null
+function waitForReady() {
+    if (bp.scripts.ready) {
+        // Commands etc are initiated, ready for scripts to run
+        for (let i in bp.scripts.list) {
+            bp.scripts.list[i].content.main
+                ? bp.scripts.list[i].content.main()
+                : null
+        }
+        runHook("window.ready")
+    } else {
+        setTimeout(waitForReady, 20)
+    }
 }
-runHook("window.ready")
+waitForReady()
 
 $(runHook("window.domReady"))
 
