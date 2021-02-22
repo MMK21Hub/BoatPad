@@ -108,7 +108,7 @@ if (fs.existsSync("./.boatpad/scripts/")) {
         files.forEach((file) => {
             if (path.extname(file) === ".js") {
                 // We found a script!
-                console.log("Registering " + file)
+                log("Scripts", "Registering " + file)
                 validScript = true
                 try {
                     acorn.parse(fs.readFileSync("./.boatpad/scripts/" + file), {
@@ -136,11 +136,11 @@ if (fs.existsSync("./.boatpad/scripts/")) {
             }
         })
         bp.scripts.ready = true
-        console.log("All scripts registered")
+        log("Scripts", "All scripts registered")
 
         // Load scripts:
         // TODO: Some sort of /reload equivalent
-        console.log(`Loading ${bp.scripts.list.length} script(s)`)
+        log("Scripts", `Loading ${bp.scripts.list.length} script(s)`)
         for (let i in bp.scripts.list) {
             bp.scripts.list[i].content = require(bp.scripts.list[i].path)
             bp.scripts.list[i].content.early
