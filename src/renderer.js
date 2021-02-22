@@ -37,6 +37,13 @@ function runHook(hook) {
         handler()
     })
 }
+function log(namespace, text) {
+    console.log(
+        "[" + "%c" + namespace + "%c" + "] " + text,
+        "color:aqua",
+        "color:inherit",
+    )
+}
 
 /*const contextMenu = new Menu()
 contextMenu.append(
