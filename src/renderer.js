@@ -67,6 +67,7 @@ fs.mkdir("./.boatpad/", () => {})
 bp.hooks.list = {
     "commands.register.success": {},
     "window.domReady": {},
+    "window.ready": {},
 }
 for (hook in bp.hooks.list) {
     bp.hooks.list[hook] = {
@@ -133,7 +134,9 @@ if (fs.existsSync("./.boatpad/scripts/")) {
         console.log(`Loading ${bp.scripts.list.length} script(s)`)
         for (let i in bp.scripts.list) {
             bp.scripts.list[i].content = require(bp.scripts.list[i].path)
-            bp.scripts.list[i].content.script()
+            bp.scripts.list[i].content.early
+                ? bp.scripts.list[i].content.early()
+                : null
         }
     })
 }
@@ -221,6 +224,12 @@ bp.commands.exec = (command, args) => {
         return bp.commands.list[command].handler(args)
     }
 }
+
+// Commands etc are initiated, ready for scripts to run
+for (let i in bp.scripts.list) {
+    bp.scripts.list[i].content.main ? bp.scripts.list[i].content.main() : null
+}
+runHook("window.ready")
 
 $(runHook("window.domReady"))
 
