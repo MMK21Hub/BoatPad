@@ -63,7 +63,7 @@ window.addEventListener(
 // Init the .boatpad dir
 fs.mkdir("./.boatpad/", () => {})
 
-$(runHook("window.domReady"))
+//$(runHook("window.domReady"))
 
 $(() => {
     if (!bp.view.zen) {
