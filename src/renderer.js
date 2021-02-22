@@ -203,7 +203,9 @@ Features:
                 // Load scripts:
                 console.log(`Loading ${bp.scripts.list.length} script(s)`)
                 for (let i in bp.scripts.list) {
-                    require(bp.scripts.list[i].path).script()
+                    bp.scripts.list[i].content = require(bp.scripts.list[i]
+                        .path)
+                    bp.scripts.list[i].content.script()
                 }
             })
         }
