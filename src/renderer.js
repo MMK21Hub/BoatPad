@@ -63,6 +63,8 @@ window.addEventListener(
 // Init the .boatpad dir
 fs.mkdir("./.boatpad/", () => {})
 
+$(runHook("window.domReady"))
+
 $(() => {
     if (!bp.view.zen) {
         $("#main-textbox").prop(
@@ -142,6 +144,7 @@ Features:
                     handler: handler,
                     args: args,
                 }
+                runHook("commands.register.success")
                 return bp.commands.list[id]
             }
         }
@@ -176,7 +179,10 @@ Features:
         }
 
         // Hooks:
-        bp.hooks.list = {}
+        bp.hooks.list = {
+            "commands.register.success": {},
+            "window.domReady": {},
+        }
         for (hook in bp.hooks.list) {
             bp.hooks.list[hook] = {
                 handlers: [],
