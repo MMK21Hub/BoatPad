@@ -27,6 +27,17 @@ bp.window.createMiniWindow = () => {
 }
 bp.view.zen ||= false
 
+function runHook(hook) {
+    if (!hook) {
+        throw "Error: The hook parameter is required."
+    } else if (!bp.hooks.list[hook]) {
+        throw "Error: That hook doesn't exist"
+    }
+    bp.hooks.list[hook].handlers.forEach((handler) => {
+        handler()
+    })
+}
+
 /*const contextMenu = new Menu()
 contextMenu.append(
     new MenuItem({
@@ -108,7 +119,7 @@ Features:
         bp.commands.register = (id, name, type, handler, args) => {
             if (!id) {
                 throw "Error: The id parameter is required."
-            } else if (type && (type != "simple" || type != "handled")) {
+            } else if (type && !(type == "simple" || type == "handled")) {
                 throw "Error: Invalid command type."
             } else if (id.split(".").length === 1) {
                 throw "Error: Command ids must be namespaced."
@@ -162,6 +173,25 @@ Features:
             } else {
                 throw "Error: Tried to register script from unsafe source"
             }
+        }
+
+        // Hooks:
+        bp.hooks.list = {}
+        for (hook in bp.hooks.list) {
+            bp.hooks.list[hook] = {
+                handlers: [],
+            }
+        }
+        bp.hooks.addToHook = (hook, handler) => {
+            if (!hook) {
+                throw "Error: The hook parameter is required."
+            } else if (!handler) {
+                throw "Error: The handler parameter is required."
+            } else if (!bp.hooks.list[hook]) {
+                throw "Error: That hook doesn't exist"
+            }
+            index = bp.hooks.list[hook].handlers.push(handler) - 1
+            return index
         }
 
         // Register any new scripts:
