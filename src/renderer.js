@@ -5,6 +5,10 @@ const {
     systemPreferences,
 } = require("electron").remote
 const remote = require("electron").remote
+const fs = require("fs")
+//const fsp = fs.promises
+const path = require("path")
+const acorn = require("acorn")
 
 bp.window.currentWindow = remote.getCurrentWindow()
 
@@ -44,6 +48,9 @@ window.addEventListener(
     },
     false,
 )*/
+
+// Init the .boatpad dir
+fs.mkdir("./.boatpad/", () => {})
 
 $(() => {
     if (!bp.view.zen) {
@@ -147,6 +154,60 @@ Features:
             } else {
                 return bp.commands.list[command].handler(args)
             }
+        }
+        bp.scripts.list = []
+        bp.scripts.register = (path) => {
+            if (!path) {
+                throw "Error: The path parameter is required."
+            } else {
+                throw "Error: Tried to register script from unsafe source"
+            }
+        }
+
+        // Register any new scripts:
+        if (fs.existsSync("./.boatpad/scripts/")) {
+            fs.readdir("./.boatpad/scripts/", (err, files) => {
+                files.forEach((file) => {
+                    if (path.extname(file) === ".js") {
+                        // We found a script!
+                        console.log("Registering " + file)
+                        validScript = true
+                        try {
+                            acorn.parse(
+                                fs.readFileSync("./.boatpad/scripts/" + file),
+                                { ecmaVersion: 2020, sourceType: "module" },
+                            )
+                        } catch (error) {
+                            console.error(
+                                `Failed to parse script when registering (${file}). Scripts must be valid ES2020. \n${error.message}`,
+                            )
+                            validScript = false
+                        }
+                        if (validScript) {
+                            bp.scripts.list.push({
+                                name: file,
+                                id: file.split(".")[0], // TODO: prevent duplicate IDs
+                                path: "../.boatpad/scripts/" + file,
+                                enabled: true,
+                            })
+                        }
+                    } else if (path.extname(file) === ".ts") {
+                        console.warn(
+                            "Skipping typescript file in scripts folder: " +
+                                file,
+                        )
+                    }
+                })
+                console.log("All scripts registered")
+
+                // Load scripts:
+                console.log(`Loading ${bp.scripts.list.length} script(s)`)
+                for (let i in bp.scripts.list) {
+                    bp.scripts.list[i].content = require(bp.scripts.list[i]
+                        .path)
+                    bp.scripts.list[i].content.script()
+                }
+            })
         }
     } else {
         $("#main-textbox")

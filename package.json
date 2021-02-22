@@ -9,7 +9,9 @@
   "scripts": {
     "start": "electron src/main.js"
   },
-  "dependencies": {},
+  "dependencies": {
+    "acorn": "^8.0.5"
+  },
   "devDependencies": {
     "electron": "11.0.0-beta.13"
   }
