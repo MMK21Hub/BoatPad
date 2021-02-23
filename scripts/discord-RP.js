@@ -74,6 +74,11 @@ module.exports = {
                     // Try to update ASAP:
                     setActivity()
                     break
+                case "toggle":
+                    anonymous = !anonymous
+                    // Try to update ASAP:
+                    setActivity()
+                    break
                 default:
                     break
             }
@@ -94,10 +99,43 @@ module.exports = {
             switchAnonymousMode,
         )
         bp.commands.register(
-            "rpc.anonymous.disable",
+            "rpc.anonymous.toggle",
             "Rich presence: Toggle anonymous mode",
             "handled",
             switchAnonymousMode,
+        )
+
+        // Let users completely enable/disable Rich Presence
+        function switchRP(args, ctx) {
+            switch (ctx.splitCommand[-1]) {
+                case "enable":
+                    anonymous = true
+                    // Try to update ASAP:
+                    setActivity()
+                    break
+                case "disable":
+                    anonymous = false
+                    // Try to update ASAP:
+                    setActivity()
+                    break
+                default:
+                    break
+            }
+        }
+
+        let enabled = true
+
+        bp.commands.register(
+            "rpc.reconnect",
+            "Rich presence: Reconnect to Discord",
+            "handled",
+            switchRP,
+        )
+        bp.commands.register(
+            "rpc.disconnect",
+            "Rich presence: Disconnect from Discord",
+            "handled",
+            switchRP,
         )
 
         // Work out what status to show:
@@ -109,6 +147,7 @@ module.exports = {
         }
 
         async function setActivity() {
+            // Prepare the data:
             activity = {}
             if (details) {
                 activity.details = details
@@ -118,7 +157,10 @@ module.exports = {
                 activity.startTimestamp = startTime
             }
 
-            rpc.setActivity(activity)
+            // Send it to Discord:
+            if (enabled) {
+                rpc.setActivity(activity)
+            }
         }
 
         rpc.on("ready", () => {
