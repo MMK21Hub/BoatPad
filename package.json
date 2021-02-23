@@ -10,7 +10,8 @@
     "start": "electron src/main.js"
   },
   "dependencies": {
-    "acorn": "^8.0.5"
+    "acorn": "^8.0.5",
+    "discord-rpc": "^3.2.0"
   },
   "devDependencies": {
     "electron": "11.0.0-beta.13"
