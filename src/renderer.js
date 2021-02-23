@@ -274,7 +274,7 @@ Features:
             .prop(
                 "placeholder",
                 `\
-== BoatPad Immersive Window ==
+Welcome to the BoatPad Immersive Window.
 
 Hit Ctrl+W to return to the main window.`,
             )
