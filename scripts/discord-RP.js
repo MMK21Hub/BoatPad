@@ -34,7 +34,7 @@ module.exports = {
         // Initialize the RPC client:
         const rpc = new RPC.Client({ transport: "ipc" })
         // Take a note of the current time:
-        const startTimestamp = new Date()
+        const startTime = new Date()
 
         // Let users enter a custom status:
         let details = null
@@ -53,7 +53,7 @@ module.exports = {
             "rpc.details.remove",
             "Rich presence: Reset details",
             "handled",
-            (args) => {
+            () => {
                 details = null
                 // Try to update ASAP:
                 setActivity()
@@ -61,7 +61,33 @@ module.exports = {
             0,
         )
 
+        // Let users disable extra info:
+        let anonymous = false
+        bp.commands.register(
+            "rpc.anonymous.enable",
+            "Rich presence: Enable anonymous mode",
+            "handled",
+            () => {
+                anonymous = true
+                // Try to update ASAP:
+                setActivity()
+            },
+            0,
+        )
+        bp.commands.register(
+            "rpc.anonymous.disable",
+            "Rich presence: Enable anonymous mode",
+            "handled",
+            () => {
+                anonymous = false
+                // Try to update ASAP:
+                setActivity()
+            },
+            0,
+        )
+
         // Work out what status to show:
+        let status
         if (bp.view.zen) {
             status = "In popout window"
         } else {
@@ -69,19 +95,16 @@ module.exports = {
         }
 
         async function setActivity() {
+            activity = {}
             if (details) {
-                rpc.setActivity({
-                    details,
-                    state: status,
-                    startTimestamp,
-                })
-            } else {
-                rpc.setActivity({
-                    state: status,
-                    startTimestamp,
-                    instance: false,
-                })
+                activity.details = details
             }
+            if (!anonymous) {
+                activity.state = status
+                activity.startTimestamp = startTime
+            }
+
+            rpc.setActivity(activity)
         }
 
         rpc.on("ready", () => {
