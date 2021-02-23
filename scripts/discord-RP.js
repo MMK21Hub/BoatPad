@@ -62,6 +62,8 @@ module.exports = {
         )
 
         // Let users disable extra info:
+        let anonymous = false
+
         function switchAnonymousMode(args, ctx) {
             switch (ctx.splitCommand[-1]) {
                 case "enable":
@@ -84,8 +86,6 @@ module.exports = {
             }
         }
 
-        let anonymous = false
-
         bp.commands.register(
             "rpc.anonymous.enable",
             "Rich presence: Enable anonymous mode",
@@ -106,24 +106,22 @@ module.exports = {
         )
 
         // Let users completely enable/disable Rich Presence
+        let enabled = true
+
         function switchRP(args, ctx) {
             switch (ctx.splitCommand[-1]) {
                 case "enable":
-                    anonymous = true
-                    // Try to update ASAP:
+                    enabled = true
                     setActivity()
                     break
                 case "disable":
-                    anonymous = false
-                    // Try to update ASAP:
-                    setActivity()
+                    enabled = false
+                    rpc.clearActivity()
                     break
                 default:
                     break
             }
         }
-
-        let enabled = true
 
         bp.commands.register(
             "rpc.reconnect",
