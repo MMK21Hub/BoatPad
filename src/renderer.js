@@ -232,6 +232,7 @@ bp.commands.exec = (command, args, origin = "unknown") => {
     } else {
         ctx = {
             command,
+            splitCommand: command.split("."),
             origin,
             window: remote.getCurrentWindow(),
         }
