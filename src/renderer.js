@@ -205,16 +205,16 @@ bp.commands.register = (id, name, type, handler, args) => {
         type ||= "handled"
         args ||= null
         bp.commands.list[id] = {
-            name: name,
-            type: type,
-            handler: handler,
-            args: args,
+            name,
+            type,
+            handler,
+            args,
         }
         runHook("commands.register.success")
         return bp.commands.list[id]
     }
 }
-bp.commands.exec = (command, args) => {
+bp.commands.exec = (command, args, origin = "unknown") => {
     if (!command) {
         throw "Error: The command parameter is required."
     } else if (!bp.commands.list.hasOwnProperty(command)) {
@@ -230,7 +230,12 @@ bp.commands.exec = (command, args) => {
             bp.commands.list[command].args ? bp.commands.list[command].args : 0
         } arguments, but received ${args ? args.length : "none"}.`
     } else {
-        return bp.commands.list[command].handler(args)
+        ctx = {
+            command,
+            origin,
+            window: remote.getCurrentWindow(),
+        }
+        return bp.commands.list[command].handler(args, ctx)
     }
 }
 
